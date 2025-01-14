@@ -1,6 +1,9 @@
 data_input
+data_output
 lab1_IO.o
 matrixgen.o
 demo.o
 matrixgen
 demo
+
+*.zip
