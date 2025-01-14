@@ -26,7 +26,7 @@ void *matrix_multiply(void *arg) {
     return NULL;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     int **A, **B, **C;
     int size, num_threads;
     double start, end;
@@ -42,8 +42,12 @@ int main() {
     }
 
     // Initialize threads
-    printf("Enter the number of threads: ");
-    scanf("%d", &num_threads);
+    if (argc > 1) {
+        num_threads = atoi(argv[1]);
+    } else {
+        num_threads = 1;
+    }
+
     if (num_threads <= 0 || num_threads > size) {
         printf("Invalid number of threads. Must be between 1 and %d.\n", size);
         return -1;
