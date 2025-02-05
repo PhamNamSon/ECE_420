@@ -11,7 +11,6 @@ void *ServerEcho(void *args)
 {
     int clientFileDescriptor=(int)args;
     char str[20];
-
     read(clientFileDescriptor,str,20);
     printf("reading from client:%s\n",str);
     write(clientFileDescriptor,str,20);
