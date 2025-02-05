@@ -13,7 +13,7 @@ char **theArray;
 pthread_mutex_t *arrayLocks;
 
 
-void *ServerEcho(void *args)
+void *Operate(void *args)
 {
     int clientFileDescriptor=(long)args;
     ClientRequest rqst;
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
             {
                 clientFileDescriptor = accept(serverFileDescriptor, NULL, NULL);
                 printf("Connected to client %d\n", clientFileDescriptor);
-                pthread_create(&t[i], NULL, ServerEcho, (void *)(long)clientFileDescriptor);
+                pthread_create(&t[i], NULL, Operate, (void *)(long)clientFileDescriptor);
                 pthread_join(t[i], NULL);
             }
         }
