@@ -11,9 +11,11 @@
 
 char **theArray;
 pthread_mutex_t *arrayLocks;
+double accessTimes[COM_NUM_REQUEST];
+int reqcount = 0;
+pthread_mutex_t timeLock=PTHREAD_MUTEX_INITIALIZER;
 
-
-void *ServerEcho(void *args)
+void *Operate(void *args)
 {
     int clientFileDescriptor=(long)args;
     ClientRequest rqst;
@@ -21,6 +23,8 @@ void *ServerEcho(void *args)
     read(clientFileDescriptor, buffer, COM_BUFF_SIZE);
     ParseMsg(buffer, &rqst);
     printf("reading from client:%s\n",buffer);
+    double start, end;
+    GET_TIME(start);
     pthread_mutex_lock(&arrayLocks[rqst.pos]);
     if (rqst.is_read){
         getContent(buffer, rqst.pos, theArray);
@@ -29,6 +33,12 @@ void *ServerEcho(void *args)
         getContent(buffer, rqst.pos, theArray);
     }
     pthread_mutex_unlock(&arrayLocks[rqst.pos]);
+    GET_TIME(end);
+
+    pthread_mutex_lock(&timeLock);
+    accessTimes[reqcount++] = end - start;
+    pthread_mutex_unlock(&timeLock);
+
     write(clientFileDescriptor,buffer,COM_BUFF_SIZE);
     close(clientFileDescriptor);
     return NULL;
@@ -72,9 +82,12 @@ int main(int argc, char *argv[])
             {
                 clientFileDescriptor = accept(serverFileDescriptor, NULL, NULL);
                 printf("Connected to client %d\n", clientFileDescriptor);
-                pthread_create(&t[i], NULL, ServerEcho, (void *)(long)clientFileDescriptor);
+                pthread_create(&t[i], NULL, Operate, (void *)(long)clientFileDescriptor);
                 pthread_join(t[i], NULL);
             }
+            printf("All threads are done\n");
+            saveTimes(accessTimes, COM_NUM_REQUEST);
+            printf("All times are saved\n");
         }
         close(serverFileDescriptor);
     }
