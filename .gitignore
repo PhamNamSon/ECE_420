@@ -1,10 +1,10 @@
 data_input
 data_output
-lab1_IO.o
-matrixgen.o
-main.o
 matrixgen
 main
 
+*.o
 *.zip
 *:Zone.Identifier
+
+.vscode
