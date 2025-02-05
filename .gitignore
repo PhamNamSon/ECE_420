@@ -7,3 +7,4 @@ matrixgen
 main
 
 *.zip
+*:Zone.Identifier
