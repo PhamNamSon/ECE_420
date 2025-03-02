@@ -40,6 +40,7 @@ Example:
 #include <stdlib.h>
 #include <time.h>
 #include "Lab3IO.h"
+#include <bits/getopt_core.h>
 
 #define DECIMAL 100.0
 
