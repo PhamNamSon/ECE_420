@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
     }
     GET_TIME(end_time);
     double time = end_time - start_time;
+    printf("Time: %f\n", time);
     Lab3SaveOutput(X, n, time);
     DestroyMat(A, n);
     DestroyVec(X);
