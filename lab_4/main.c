@@ -17,7 +17,7 @@ int main (int argc, char* argv[]) {
     int i, j;
     int iterationcount=0;
     double start, end, elapsed;
-    FILE *fp;
+    FILE *fp = NULL;
     int rank, size;
     int *link_array;
     int nodeIndex, nodein, nodeout;
