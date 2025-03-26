@@ -32,7 +32,10 @@ int main (int argc, char* argv[]) {
             printf("Error opening data_input_meta\n");
             MPI_Abort(MPI_COMM_WORLD, 1);
         }
-        (void)fscanf(fp, "%d\n", &nodecount);
+        if (fscanf(fp, "%d\n", &nodecount) != 1) {
+            fprintf(stderr, "Error reading node count\n");
+            MPI_Abort(MPI_COMM_WORLD, 1);
+        }
     }
 
     MPI_Bcast(&nodecount, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -41,7 +44,10 @@ int main (int argc, char* argv[]) {
 
     if (rank == 0) {
         for (i = 0; i < nodecount; i++) {
-            (void)fscanf(fp, "%d\t%d\t%d\n", &nodeIndex, &nodein, &nodeout);
+            if (fscanf(fp, "%d\t%d\t%d\n", &nodeIndex, &nodein, &nodeout) != 3) {
+                fprintf(stderr, "Error reading metadata for node %d\n", i);
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
             link_array[nodeIndex] = nodeout;
         }
         fclose(fp);
