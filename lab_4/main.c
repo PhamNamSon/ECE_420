@@ -15,7 +15,7 @@ int main (int argc, char* argv[]) {
     int nodecount;
     double *r, *r_pre;
     int i, j;
-    int iterationcount;
+    int iterationcount=0;
     double start, end, elapsed;
     FILE *fp;
     int rank, size;
@@ -32,7 +32,7 @@ int main (int argc, char* argv[]) {
             printf("Error opening data_input_meta\n");
             MPI_Abort(MPI_COMM_WORLD, 1);
         }
-        fscanf(fp, "%d\n", &nodecount);
+        (void)fscanf(fp, "%d\n", &nodecount);
     }
 
     MPI_Bcast(&nodecount, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -41,7 +41,7 @@ int main (int argc, char* argv[]) {
 
     if (rank == 0) {
         for (i = 0; i < nodecount; i++) {
-            fscanf(fp, "%d\t%d\t%d\n", &nodeIndex, &nodein, &nodeout);
+            (void)fscanf(fp, "%d\t%d\t%d\n", &nodeIndex, &nodein, &nodeout);
             link_array[nodeIndex] = nodeout;
         }
         fclose(fp);
