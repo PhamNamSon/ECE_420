@@ -52,8 +52,10 @@ int main (int argc, char* argv[]) {
         }
         fclose(fp);
     }
-
+    
     MPI_Bcast(link_array, nodecount, MPI_INT, 0, MPI_COMM_WORLD);
+
+    GET_TIME(start);
 
     int node_per_process = nodecount / size;
     int rem = nodecount % size;
@@ -102,7 +104,7 @@ int main (int argc, char* argv[]) {
     double *total_r = (double*) malloc(nodecount * sizeof(double));
     double rel_err;
 
-    GET_TIME(start);
+    // GET_TIME(start);
 
     do {
         iterationcount++;
@@ -127,12 +129,12 @@ int main (int argc, char* argv[]) {
 
     } while (rel_err >= EPSILON);
 
-    GET_TIME(end);
-    elapsed = end - start;
-
     MPI_Gatherv(r, local_n, MPI_DOUBLE,
                 total_r, sendcounts, displs, MPI_DOUBLE,
                 0, MPI_COMM_WORLD);
+
+    GET_TIME(end);
+    elapsed = end - start;
 
     if (rank == 0) {
         Lab4_saveoutput(total_r, nodecount, elapsed);
